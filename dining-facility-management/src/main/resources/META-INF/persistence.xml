@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_2.xsd"
+             version="3.2">
+    <persistence-unit name="default">
+
+    </persistence-unit>
+
+    <persistence-unit name="mariadb-pu">
+        <class>entity.DiningTable</class>
+        <class>entity.Dish</class>
+        <class>entity.DishPriceHistory</class>
+        <class>entity.Ingredient</class>
+        <class>entity.IngredientBatch</class>
+        <class>entity.IngredientModel</class>
+        <class>entity.OrderDetail</class>
+        <class>entity.OrderHeader</class>
+        <class>entity.PurchaseOrderDetail</class>
+        <class>entity.PurchaseOrderHeader</class>
+        <class>entity.Recipe</class>
+        <class>entity.Vendor</class>
+
+
+        <properties>
+            <property name="jakarta.persistence.jdbc.driver"
+                      value="org.mariadb.jdbc.Driver"/>
+            <property name="jakarta.persistence.jdbc.url"
+                      value="jdbc:mariadb://localhost:3306/dining_facility_management"/>
+            <property name="jakarta.persistence.jdbc.user" value="root"/>
+            <property name="jakarta.persistence.jdbc.password"
+                      value="root"/>
+            <property name="jakarta.persistence.jdbc.dialect"
+                      value="org.hibernate.dialect.MariaDBDialect"/>
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+        </properties>
+    </persistence-unit>
+</persistence>
