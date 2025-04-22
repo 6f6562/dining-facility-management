@@ -1,100 +1,59 @@
 package service.impl;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
+import dao.IngredientBatchDAO;
 import model.IngredientBatch;
-import utils.JPAUtil;
+import service.IngredientBatchService;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class IngredientBatchServiceImpl {
+public class IngredientBatchServiceImpl extends UnicastRemoteObject implements IngredientBatchService {
 
-    /**
-     * Create or Save a new IngredientBatch
-     */
-    public void save(IngredientBatch ingredientBatch) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
+    private final IngredientBatchDAO ingredientBatchDAO;
 
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.persist(ingredientBatch); // Lưu mới
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    public IngredientBatchServiceImpl() throws RemoteException {
+        super();
+        this.ingredientBatchDAO = new IngredientBatchDAO();
     }
 
-    /**
-     * Read: Find an IngredientBatch by ID
-     */
-    public IngredientBatch findById(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.find(IngredientBatch.class, id); // Tìm IngredientBatch theo ID
-        } finally {
-            em.close();
-        }
+    @Override
+    public void create(IngredientBatch ingredientBatch) throws RemoteException {
+        ingredientBatchDAO.create(ingredientBatch);
     }
 
-    /**
-     * Read: Get all IngredientBatches
-     */
-    public List<IngredientBatch> findAll() {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.createQuery("from IngredientBatch", IngredientBatch.class).getResultList(); // Lấy tất cả
-        } finally {
-            em.close();
-        }
+    @Override
+    public void update(IngredientBatch ingredientBatch) throws RemoteException {
+        ingredientBatchDAO.update(ingredientBatch);
     }
 
-    /**
-     * Update an existing IngredientBatch
-     */
-    public void update(IngredientBatch ingredientBatch) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.merge(ingredientBatch); // Cập nhật thông tin
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    @Override
+    public void deleteById(Integer id) throws RemoteException {
+        ingredientBatchDAO.deleteById(id);
     }
 
-    /**
-     * Delete an IngredientBatch by ID
-     */
-    public void delete(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
+    @Override
+    public IngredientBatch findById(Integer id) throws RemoteException {
+        return ingredientBatchDAO.findById(id);
+    }
 
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            IngredientBatch ingredientBatch = em.find(IngredientBatch.class, id);
-            if (ingredientBatch != null) {
-                em.remove(ingredientBatch); // Xóa thông tin
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    @Override
+    public List<IngredientBatch> findAll() throws RemoteException {
+        return ingredientBatchDAO.findAll();
+    }
+
+    @Override
+    public List<IngredientBatch> findByIngredientId(Integer ingredientId) throws RemoteException {
+        return ingredientBatchDAO.findByIngredientId(ingredientId);
+    }
+
+    @Override
+    public List<IngredientBatch> findExpiringSoon(int daysBeforeExpire) throws RemoteException {
+        return ingredientBatchDAO.findExpiringSoon(daysBeforeExpire);
+    }
+
+    @Override
+    public List<IngredientBatch> findLowStock(int threshold) throws RemoteException {
+        return ingredientBatchDAO.findLowStock(threshold);
     }
 }

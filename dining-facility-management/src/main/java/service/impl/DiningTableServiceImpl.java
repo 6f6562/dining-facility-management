@@ -1,85 +1,43 @@
 package service.impl;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
+import dao.DiningTableDAO;
 import model.DiningTable;
-import utils.JPAUtil;
+import service.DiningTableService;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class DiningTableServiceImpl {
+public class DiningTableServiceImpl extends UnicastRemoteObject implements DiningTableService {
+    private final DiningTableDAO diningTableDAO;
 
-    public void save(DiningTable diningTable) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.persist(diningTable); // Lưu mới
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    public DiningTableServiceImpl() throws RemoteException {
+        super();
+        this.diningTableDAO = new DiningTableDAO();
     }
 
-    public DiningTable findById(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.find(DiningTable.class, id); // Tìm DiningTable theo ID
-        } finally {
-            em.close();
-        }
+    @Override
+    public void create(DiningTable diningTable) throws RemoteException {
+        diningTableDAO.create(diningTable);
     }
 
-    public List<DiningTable> findAll() {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.createQuery("from DiningTable", DiningTable.class).getResultList(); // Lấy tất cả các bàn
-        } finally {
-            em.close();
-        }
+    @Override
+    public void update(DiningTable diningTable) throws RemoteException {
+        diningTableDAO.update(diningTable);
     }
 
-    public void update(DiningTable diningTable) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.merge(diningTable); // Cập nhật bàn
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    @Override
+    public void deleteById(Integer id) throws RemoteException {
+        diningTableDAO.deleteById(id);
     }
 
-    public void delete(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
+    @Override
+    public DiningTable findById(Integer id) throws RemoteException {
+        return diningTableDAO.findById(id);
+    }
 
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            DiningTable diningTable = em.find(DiningTable.class, id);
-            if (diningTable != null) {
-                em.remove(diningTable); // Xóa bàn
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    @Override
+    public List<DiningTable> findAll() throws RemoteException {
+        return diningTableDAO.findAll();
     }
 }

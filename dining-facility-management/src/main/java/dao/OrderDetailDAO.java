@@ -1,100 +1,33 @@
 package dao;
 
+import jakarta.persistence.TypedQuery;
 import model.OrderDetail;
-import utils.JPAUtil;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 
 import java.util.List;
 
-public class OrderDetailDAO {
+public class OrderDetailDAO extends GenericDAOImpl<OrderDetail, Integer> {
+    public OrderDetailDAO() {
+        super(OrderDetail.class);
+    }
 
+    // TODO: Custom methods here
     /**
-     * Create or Save a new OrderDetail
+     * Tìm danh sách OrderDetail theo OrderHeader (ID đơn hàng)
      */
-    public void save(OrderDetail orderDetail) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.persist(orderDetail); // Lưu mới
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    public List<OrderDetail> findByOrderHeaderId(Integer orderHeaderId) {
+        String jpql = "SELECT od FROM OrderDetail od WHERE od.orderHeader.id = :orderHeaderId";
+        TypedQuery<OrderDetail> query = em.createQuery(jpql, OrderDetail.class);
+        query.setParameter("orderHeaderId", orderHeaderId);
+        return query.getResultList();
     }
 
     /**
-     * Read: Find an OrderDetail by ID
+     * Tìm danh sách OrderDetail theo Dish (món ăn)
      */
-    public OrderDetail findById(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.find(OrderDetail.class, id); // Tìm OrderDetail theo ID
-        } finally {
-            em.close();
-        }
-    }
-
-    /**
-     * Read: Get all OrderDetails
-     */
-    public List<OrderDetail> findAll() {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.createQuery("from OrderDetail", OrderDetail.class).getResultList(); // Lấy tất cả
-        } finally {
-            em.close();
-        }
-    }
-
-    /**
-     * Update an existing OrderDetail
-     */
-    public void update(OrderDetail orderDetail) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.merge(orderDetail); // Cập nhật thông tin
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
-    }
-
-    /**
-     * Delete an OrderDetail by ID
-     */
-    public void delete(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            OrderDetail orderDetail = em.find(OrderDetail.class, id);
-            if (orderDetail != null) {
-                em.remove(orderDetail); // Xóa thông tin
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    public List<OrderDetail> findByDishId(Integer dishId) {
+        String jpql = "SELECT od FROM OrderDetail od WHERE od.dish.id = :dishId";
+        TypedQuery<OrderDetail> query = em.createQuery(jpql, OrderDetail.class);
+        query.setParameter("dishId", dishId);
+        return query.getResultList();
     }
 }

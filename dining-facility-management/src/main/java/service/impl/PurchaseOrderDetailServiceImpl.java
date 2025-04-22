@@ -1,100 +1,53 @@
 package service.impl;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
+import dao.PurchaseOrderDetailDAO;
 import model.PurchaseOrderDetail;
-import utils.JPAUtil;
+import service.PurchaseOrderDetailService;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class PurchaseOrderDetailServiceImpl {
+public class PurchaseOrderDetailServiceImpl extends UnicastRemoteObject implements PurchaseOrderDetailService {
+    private final PurchaseOrderDetailDAO purchaseOrderDetailDAO;
 
-    /**
-     * Create or Save a new PurchaseOrderDetail
-     */
-    public void save(PurchaseOrderDetail purchaseOrderDetail) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.persist(purchaseOrderDetail); // Lưu mới
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    public PurchaseOrderDetailServiceImpl() throws RemoteException {
+        super();
+        this.purchaseOrderDetailDAO = new PurchaseOrderDetailDAO();
     }
 
-    /**
-     * Read: Find a PurchaseOrderDetail by ID
-     */
-    public PurchaseOrderDetail findById(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.find(PurchaseOrderDetail.class, id); // Tìm PurchaseOrderDetail theo ID
-        } finally {
-            em.close();
-        }
+    @Override
+    public void create(PurchaseOrderDetail purchaseOrderDetail) throws RemoteException {
+        purchaseOrderDetailDAO.create(purchaseOrderDetail);
     }
 
-    /**
-     * Read: Get all PurchaseOrderDetails
-     */
-    public List<PurchaseOrderDetail> findAll() {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.createQuery("from PurchaseOrderDetail", PurchaseOrderDetail.class).getResultList(); // Lấy tất cả
-        } finally {
-            em.close();
-        }
+    @Override
+    public void update(PurchaseOrderDetail purchaseOrderDetail) throws RemoteException {
+        purchaseOrderDetailDAO.update(purchaseOrderDetail);
     }
 
-    /**
-     * Update an existing PurchaseOrderDetail
-     */
-    public void update(PurchaseOrderDetail purchaseOrderDetail) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.merge(purchaseOrderDetail); // Cập nhật thông tin
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    @Override
+    public void deleteById(Integer id) throws RemoteException {
+        purchaseOrderDetailDAO.deleteById(id);
     }
 
-    /**
-     * Delete a PurchaseOrderDetail by ID
-     */
-    public void delete(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
+    @Override
+    public PurchaseOrderDetail findById(Integer id) throws RemoteException {
+        return purchaseOrderDetailDAO.findById(id);
+    }
 
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            PurchaseOrderDetail purchaseOrderDetail = em.find(PurchaseOrderDetail.class, id);
-            if (purchaseOrderDetail != null) {
-                em.remove(purchaseOrderDetail); // Xóa thông tin
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    @Override
+    public List<PurchaseOrderDetail> findAll() throws RemoteException {
+        return purchaseOrderDetailDAO.findAll();
+    }
+
+    @Override
+    public List<PurchaseOrderDetail> findByPurchaseOrderHeaderId(Integer purchaseOrderHeaderId) throws RemoteException {
+        return purchaseOrderDetailDAO.findByPurchaseOrderHeaderId(purchaseOrderHeaderId);
+    }
+
+    @Override
+    public List<PurchaseOrderDetail> findByIngredientId(Integer ingredientId) throws RemoteException {
+        return purchaseOrderDetailDAO.findByIngredientId(ingredientId);
     }
 }

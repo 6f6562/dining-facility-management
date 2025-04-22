@@ -1,100 +1,58 @@
 package service.impl;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
+import dao.OrderHeaderDAO;
 import model.OrderHeader;
-import utils.JPAUtil;
+import service.OrderHeaderService;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class OrderHeaderServiceImpl {
+public class OrderHeaderServiceImpl extends UnicastRemoteObject implements OrderHeaderService {
+    private final OrderHeaderDAO orderHeaderDAO;
 
-    /**
-     * Create or Save a new OrderHeader
-     */
-    public void save(OrderHeader orderHeader) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.persist(orderHeader); // Lưu mới
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    public OrderHeaderServiceImpl() throws RemoteException {
+        super();
+        this.orderHeaderDAO = new OrderHeaderDAO();
     }
 
-    /**
-     * Read: Find an OrderHeader by ID
-     */
-    public OrderHeader findById(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.find(OrderHeader.class, id); // Tìm OrderHeader theo ID
-        } finally {
-            em.close();
-        }
+    @Override
+    public void create(OrderHeader orderHeader) throws RemoteException {
+        orderHeaderDAO.create(orderHeader);
     }
 
-    /**
-     * Read: Get all OrderHeaders
-     */
-    public List<OrderHeader> findAll() {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.createQuery("from OrderHeader", OrderHeader.class).getResultList(); // Lấy tất cả
-        } finally {
-            em.close();
-        }
+    @Override
+    public void update(OrderHeader orderHeader) throws RemoteException {
+        orderHeaderDAO.update(orderHeader);
     }
 
-    /**
-     * Update an existing OrderHeader
-     */
-    public void update(OrderHeader orderHeader) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.merge(orderHeader); // Cập nhật thông tin
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    @Override
+    public void deleteById(Integer id) throws RemoteException {
+        orderHeaderDAO.deleteById(id);
     }
 
-    /**
-     * Delete an OrderHeader by ID
-     */
-    public void delete(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
+    @Override
+    public OrderHeader findById(Integer id) throws RemoteException {
+        return orderHeaderDAO.findById(id);
+    }
 
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            OrderHeader orderHeader = em.find(OrderHeader.class, id);
-            if (orderHeader != null) {
-                em.remove(orderHeader); // Xóa thông tin
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    @Override
+    public List<OrderHeader> findAll() throws RemoteException {
+        return orderHeaderDAO.findAll();
+    }
+
+    @Override
+    public List<OrderHeader> findByTableId(Integer tableId) throws RemoteException {
+        return orderHeaderDAO.findByTableId(tableId);
+    }
+
+    @Override
+    public List<OrderHeader> findByDateRange(String startDate, String endDate) throws RemoteException {
+        return orderHeaderDAO.findByDateRange(startDate, endDate);
+    }
+
+    @Override
+    public List<OrderHeader> findPendingOrders() throws RemoteException {
+        return orderHeaderDAO.findPendingOrders();
     }
 }

@@ -1,100 +1,54 @@
 package service.impl;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
+import dao.DishPriceHistoryDAO;
 import model.DishPriceHistory;
-import utils.JPAUtil;
+import service.DishPriceHistoryService;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class DishPriceHistoryServiceImpl {
+public class DishPriceHistoryServiceImpl extends UnicastRemoteObject implements DishPriceHistoryService {
 
-    /**
-     * Create or Save a new DishPriceHistory
-     */
-    public void save(DishPriceHistory dishPriceHistory) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
+    private final DishPriceHistoryDAO dishPriceHistoryDAO;
 
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.persist(dishPriceHistory); // Lưu mới
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    public DishPriceHistoryServiceImpl() throws RemoteException {
+        super();
+        this.dishPriceHistoryDAO = new DishPriceHistoryDAO();
     }
 
-    /**
-     * Read: Find a DishPriceHistory by ID
-     */
-    public DishPriceHistory findById(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.find(DishPriceHistory.class, id); // Tìm DishPriceHistory theo ID
-        } finally {
-            em.close();
-        }
+    @Override
+    public void create(DishPriceHistory dishPriceHistory) throws RemoteException {
+        dishPriceHistoryDAO.create(dishPriceHistory);
     }
 
-    /**
-     * Read: Get all DishPriceHistories
-     */
-    public List<DishPriceHistory> findAll() {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.createQuery("from DishPriceHistory", DishPriceHistory.class).getResultList(); // Lấy tất cả
-        } finally {
-            em.close();
-        }
+    @Override
+    public void update(DishPriceHistory dishPriceHistory) throws RemoteException {
+        dishPriceHistoryDAO.update(dishPriceHistory);
     }
 
-    /**
-     * Update an existing DishPriceHistory
-     */
-    public void update(DishPriceHistory dishPriceHistory) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.merge(dishPriceHistory); // Cập nhật thông tin
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    @Override
+    public void deleteById(Integer id) throws RemoteException {
+        dishPriceHistoryDAO.deleteById(id);
     }
 
-    /**
-     * Delete a DishPriceHistory by ID
-     */
-    public void delete(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
+    @Override
+    public DishPriceHistory findById(Integer id) throws RemoteException {
+        return dishPriceHistoryDAO.findById(id);
+    }
 
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            DishPriceHistory dishPriceHistory = em.find(DishPriceHistory.class, id);
-            if (dishPriceHistory != null) {
-                em.remove(dishPriceHistory); // Xóa thông tin
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    @Override
+    public List<DishPriceHistory> findAll() throws RemoteException {
+        return dishPriceHistoryDAO.findAll();
+    }
+
+    @Override
+    public List<DishPriceHistory> findByDishId(Integer dishId) throws RemoteException {
+        return dishPriceHistoryDAO.findByDishId(dishId);
+    }
+
+    @Override
+    public DishPriceHistory findLatestByDishId(Integer dishId) throws RemoteException {
+        return dishPriceHistoryDAO.findLatestByDishId(dishId);
     }
 }

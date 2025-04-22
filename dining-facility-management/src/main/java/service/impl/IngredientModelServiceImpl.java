@@ -1,100 +1,49 @@
 package service.impl;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
+import dao.IngredientModelDAO;
 import model.IngredientModel;
-import utils.JPAUtil;
+import service.IngredientModelService;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class IngredientModelServiceImpl {
+public class IngredientModelServiceImpl extends UnicastRemoteObject implements IngredientModelService {
 
-    /**
-     * Create or Save a new IngredientModel
-     */
-    public void save(IngredientModel ingredientModel) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
+    private final IngredientModelDAO ingredientModelDAO;
 
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.persist(ingredientModel); // Lưu mới
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    public IngredientModelServiceImpl() throws RemoteException {
+        super();
+        this.ingredientModelDAO = new IngredientModelDAO();
     }
 
-    /**
-     * Read: Find an IngredientModel by ID
-     */
-    public IngredientModel findById(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.find(IngredientModel.class, id); // Tìm IngredientModel theo ID
-        } finally {
-            em.close();
-        }
+    @Override
+    public void create(IngredientModel ingredientModel) throws RemoteException {
+        ingredientModelDAO.create(ingredientModel);
     }
 
-    /**
-     * Read: Get all IngredientModels
-     */
-    public List<IngredientModel> findAll() {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.createQuery("from IngredientModel", IngredientModel.class).getResultList(); // Lấy tất cả
-        } finally {
-            em.close();
-        }
+    @Override
+    public void update(IngredientModel ingredientModel) throws RemoteException {
+        ingredientModelDAO.update(ingredientModel);
     }
 
-    /**
-     * Update an existing IngredientModel
-     */
-    public void update(IngredientModel ingredientModel) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.merge(ingredientModel); // Cập nhật thông tin
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    @Override
+    public void deleteById(Integer id) throws RemoteException {
+        ingredientModelDAO.deleteById(id);
     }
 
-    /**
-     * Delete an IngredientModel by ID
-     */
-    public void delete(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
+    @Override
+    public IngredientModel findById(Integer id) throws RemoteException {
+        return ingredientModelDAO.findById(id);
+    }
 
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            IngredientModel ingredientModel = em.find(IngredientModel.class, id);
-            if (ingredientModel != null) {
-                em.remove(ingredientModel); // Xóa thông tin
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    @Override
+    public List<IngredientModel> findAll() throws RemoteException {
+        return ingredientModelDAO.findAll();
+    }
+
+    @Override
+    public List<IngredientModel> findByDishId(Integer dishId) throws RemoteException {
+        return ingredientModelDAO.findByDishId(dishId);
     }
 }

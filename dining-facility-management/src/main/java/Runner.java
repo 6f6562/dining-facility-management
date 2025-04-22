@@ -15,7 +15,7 @@ public class Runner {
         table.setTableNumber(8);
         table.setStatus("Available");
         table.setSeatingCapacity(4);
-        diningTableDAO.save(table);
+        diningTableDAO.create(table);
 
         // 2. Create a new order
         OrderHeader order = new OrderHeader();
@@ -23,7 +23,7 @@ public class Runner {
         order.setOrderDate(LocalDateTime.now());
         order.setStatus("Pending");
         order.setSubTotal(200.00);
-        orderDAO.save(order);
+        orderDAO.create(order);
 
         // 3. Find table by ID
         DiningTable foundTable = diningTableDAO.findById(table.getId());

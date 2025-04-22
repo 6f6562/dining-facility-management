@@ -34,5 +34,5 @@ public class Vendor {
     private boolean preferredVendorStatus;
 
     @OneToMany(mappedBy = "vendor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PurchaseOrderHeader> purchaseOrderHeaders; // Liên kết với PurchaseOrderHeader
+    private List<PurchaseOrderHeader> purchaseOrderHeaders;
 }

@@ -1,97 +1,58 @@
 package service.impl;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
+import dao.DishDAO;
 import model.Dish;
-import utils.JPAUtil;
+import service.DishService;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class DishServiceImpl {
+public class DishServiceImpl extends UnicastRemoteObject implements DishService {
+    private final DishDAO dishDAO;
 
-    public void save(Dish dish) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.persist(dish); // Lưu mới
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    public DishServiceImpl() throws RemoteException {
+        super();
+        this.dishDAO = new DishDAO();
     }
 
-    /**
-     * Read: Find a Dish by ID
-     */
-    public Dish findById(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.find(Dish.class, id); // Tìm Dish theo ID
-        } finally {
-            em.close();
-        }
+    @Override
+    public void create(Dish dish) throws RemoteException {
+        dishDAO.create(dish);
     }
 
-    /**
-     * Read: Get all Dishes
-     */
-    public List<Dish> findAll() {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.createQuery("from Dish", Dish.class).getResultList(); // Lấy tất cả các món
-        } finally {
-            em.close();
-        }
+    @Override
+    public void update(Dish dish) throws RemoteException {
+        dishDAO.update(dish);
     }
 
-    /**
-     * Update an existing Dish
-     */
-    public void update(Dish dish) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.merge(dish); // Cập nhật món ăn
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    @Override
+    public void deleteById(Integer id) throws RemoteException {
+        dishDAO.deleteById(id);
     }
 
-    /**
-     * Delete a Dish by ID
-     */
-    public void delete(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
+    @Override
+    public Dish findById(Integer id) throws RemoteException {
+        return dishDAO.findById(id);
+    }
 
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            Dish dish = em.find(Dish.class, id);
-            if (dish != null) {
-                em.remove(dish); // Xóa món ăn
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    @Override
+    public List<Dish> findAll() throws RemoteException {
+        return dishDAO.findAll();
+    }
+
+    @Override
+    public List<Dish> findByCategory(String category) throws RemoteException {
+        return dishDAO.findByCategory(category);
+    }
+
+    @Override
+    public List<Dish> findAvailableDishes() throws RemoteException {
+        return dishDAO.findAvailableDishes();
+    }
+
+    @Override
+    public List<Dish> findDishesByPriceRange(double minPrice, double maxPrice) throws RemoteException {
+        return dishDAO.findDishesByPriceRange(minPrice, maxPrice);
     }
 }

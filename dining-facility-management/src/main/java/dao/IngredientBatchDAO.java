@@ -1,100 +1,45 @@
 package dao;
 
+import jakarta.persistence.TypedQuery;
 import model.IngredientBatch;
-import utils.JPAUtil;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 
+import java.time.LocalDate;
 import java.util.List;
 
-public class IngredientBatchDAO {
+public class IngredientBatchDAO extends GenericDAOImpl<IngredientBatch, Integer> {
+    public IngredientBatchDAO() {
+        super(IngredientBatch.class);
+    }
 
+    // TODO: Custom methods here
     /**
-     * Create or Save a new IngredientBatch
+     * Tìm các lô nguyên liệu theo mã nguyên liệu (ingredientId)
      */
-    public void save(IngredientBatch ingredientBatch) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.persist(ingredientBatch); // Lưu mới
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    public List<IngredientBatch> findByIngredientId(Integer ingredientId) {
+        String jpql = "SELECT b FROM IngredientBatch b WHERE b.ingredient.id = :ingredientId";
+        TypedQuery<IngredientBatch> query = em.createQuery(jpql, IngredientBatch.class);
+        query.setParameter("ingredientId", ingredientId); // vì id là Integer
+        return query.getResultList();
     }
 
     /**
-     * Read: Find an IngredientBatch by ID
+     * Tìm các lô sắp hết hạn trong X ngày tới
      */
-    public IngredientBatch findById(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.find(IngredientBatch.class, id); // Tìm IngredientBatch theo ID
-        } finally {
-            em.close();
-        }
+    public List<IngredientBatch> findExpiringSoon(int daysBeforeExpire) {
+        LocalDate thresholdDate = LocalDate.now().plusDays(daysBeforeExpire);
+        String jpql = "SELECT b FROM IngredientBatch b WHERE b.expiryDate <= :thresholdDate";
+        TypedQuery<IngredientBatch> query = em.createQuery(jpql, IngredientBatch.class);
+        query.setParameter("thresholdDate", thresholdDate);
+        return query.getResultList();
     }
 
     /**
-     * Read: Get all IngredientBatches
+     * Tìm các lô có tồn kho thấp hơn ngưỡng cho trước
      */
-    public List<IngredientBatch> findAll() {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.createQuery("from IngredientBatch", IngredientBatch.class).getResultList(); // Lấy tất cả
-        } finally {
-            em.close();
-        }
-    }
-
-    /**
-     * Update an existing IngredientBatch
-     */
-    public void update(IngredientBatch ingredientBatch) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.merge(ingredientBatch); // Cập nhật thông tin
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
-    }
-
-    /**
-     * Delete an IngredientBatch by ID
-     */
-    public void delete(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            IngredientBatch ingredientBatch = em.find(IngredientBatch.class, id);
-            if (ingredientBatch != null) {
-                em.remove(ingredientBatch); // Xóa thông tin
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    public List<IngredientBatch> findLowStock(int threshold) {
+        String jpql = "SELECT b FROM IngredientBatch b WHERE b.stockQuantity < :threshold";
+        TypedQuery<IngredientBatch> query = em.createQuery(jpql, IngredientBatch.class);
+        query.setParameter("threshold", (double) threshold);
+        return query.getResultList();
     }
 }

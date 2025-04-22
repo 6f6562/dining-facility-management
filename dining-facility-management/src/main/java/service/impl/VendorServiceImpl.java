@@ -1,100 +1,53 @@
 package service.impl;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
+import dao.VendorDAO;
 import model.Vendor;
-import utils.JPAUtil;
+import service.VendorService;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class VendorServiceImpl {
+public class VendorServiceImpl extends UnicastRemoteObject implements VendorService {
+    private final VendorDAO vendorDAO;
 
-    /**
-     * Create or Save a new Vendor
-     */
-    public void save(Vendor vendor) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.persist(vendor); // Lưu mới
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    public VendorServiceImpl() throws RemoteException {
+        super();
+        this.vendorDAO = new VendorDAO();
     }
 
-    /**
-     * Read: Find a Vendor by ID
-     */
-    public Vendor findById(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.find(Vendor.class, id); // Tìm Vendor theo ID
-        } finally {
-            em.close();
-        }
+    @Override
+    public void create(Vendor vendor) throws RemoteException {
+        vendorDAO.create(vendor);
     }
 
-    /**
-     * Read: Get all Vendors
-     */
-    public List<Vendor> findAll() {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.createQuery("from Vendor", Vendor.class).getResultList(); // Lấy tất cả
-        } finally {
-            em.close();
-        }
+    @Override
+    public void update(Vendor vendor) throws RemoteException {
+        vendorDAO.update(vendor);
     }
 
-    /**
-     * Update an existing Vendor
-     */
-    public void update(Vendor vendor) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.merge(vendor); // Cập nhật thông tin
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    @Override
+    public void deleteById(Integer id) throws RemoteException {
+        vendorDAO.deleteById(id);
     }
 
-    /**
-     * Delete a Vendor by ID
-     */
-    public void delete(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
+    @Override
+    public Vendor findById(Integer id) throws RemoteException {
+        return vendorDAO.findById(id);
+    }
 
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            Vendor vendor = em.find(Vendor.class, id);
-            if (vendor != null) {
-                em.remove(vendor); // Xóa thông tin
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    @Override
+    public List<Vendor> findAll() throws RemoteException {
+        return vendorDAO.findAll();
+    }
+
+    @Override
+    public List<Vendor> findByIngredientId(Integer ingredientId) throws RemoteException {
+        return vendorDAO.findByIngredientId(ingredientId);
+    }
+
+    @Override
+    public List<Vendor> findActiveVendors() throws RemoteException {
+        return vendorDAO.findActiveVendors();
     }
 }

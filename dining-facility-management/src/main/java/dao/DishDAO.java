@@ -1,97 +1,43 @@
 package dao;
 
+import jakarta.persistence.TypedQuery;
 import model.Dish;
-import utils.JPAUtil;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 
 import java.util.List;
 
-public class DishDAO {
+public class DishDAO extends GenericDAOImpl<Dish, Integer> {
+    public DishDAO() {
+        super(Dish.class);
+    }
 
-    public void save(Dish dish) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.persist(dish); // Lưu mới
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    // TODO: Custom methods here
+    /**
+     * Tìm danh sách món ăn theo loại (category)
+     */
+    public List<Dish> findByCategory(String category) {
+        String jpql = "SELECT d FROM Dish d WHERE d.category = :category";
+        TypedQuery<Dish> query = em.createQuery(jpql, Dish.class);
+        query.setParameter("category", category);
+        return query.getResultList();
     }
 
     /**
-     * Read: Find a Dish by ID
+     * Tìm các món đang được bán (giả sử là các món có đơn giá > 0 và đang được dùng)
      */
-    public Dish findById(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.find(Dish.class, id); // Tìm Dish theo ID
-        } finally {
-            em.close();
-        }
+    public List<Dish> findAvailableDishes() {
+        String jpql = "SELECT d FROM Dish d WHERE d.unitPrice > 0";
+        TypedQuery<Dish> query = em.createQuery(jpql, Dish.class);
+        return query.getResultList();
     }
 
     /**
-     * Read: Get all Dishes
+     * Tìm các món ăn trong khoảng giá cụ thể
      */
-    public List<Dish> findAll() {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.createQuery("from Dish", Dish.class).getResultList(); // Lấy tất cả các món
-        } finally {
-            em.close();
-        }
-    }
-
-    /**
-     * Update an existing Dish
-     */
-    public void update(Dish dish) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.merge(dish); // Cập nhật món ăn
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
-    }
-
-    /**
-     * Delete a Dish by ID
-     */
-    public void delete(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            Dish dish = em.find(Dish.class, id);
-            if (dish != null) {
-                em.remove(dish); // Xóa món ăn
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    public List<Dish> findDishesByPriceRange(double minPrice, double maxPrice) {
+        String jpql = "SELECT d FROM Dish d WHERE d.unitPrice BETWEEN :minPrice AND :maxPrice";
+        TypedQuery<Dish> query = em.createQuery(jpql, Dish.class);
+        query.setParameter("minPrice", minPrice);
+        query.setParameter("maxPrice", maxPrice);
+        return query.getResultList();
     }
 }

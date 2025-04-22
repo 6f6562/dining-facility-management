@@ -1,100 +1,40 @@
 package dao;
 
+import jakarta.persistence.TypedQuery;
 import model.OrderHeader;
-import utils.JPAUtil;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class OrderHeaderDAO {
-
-    /**
-     * Create or Save a new OrderHeader
-     */
-    public void save(OrderHeader orderHeader) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.persist(orderHeader); // Lưu mới
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+public class OrderHeaderDAO extends GenericDAOImpl<OrderHeader, Integer> {
+    public OrderHeaderDAO() {
+        super(OrderHeader.class);
     }
 
-    /**
-     * Read: Find an OrderHeader by ID
-     */
-    public OrderHeader findById(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.find(OrderHeader.class, id); // Tìm OrderHeader theo ID
-        } finally {
-            em.close();
-        }
+    // TODO: Custom methods here
+    public List<OrderHeader> findByTableId(Integer tableId) {
+        String jpql = "SELECT o FROM OrderHeader o WHERE o.diningTable.id = :tableId";
+        TypedQuery<OrderHeader> query = em.createQuery(jpql, OrderHeader.class);
+        query.setParameter("tableId", tableId);
+        return query.getResultList();
     }
 
-    /**
-     * Read: Get all OrderHeaders
-     */
-    public List<OrderHeader> findAll() {
-        EntityManager em = JPAUtil.getEntityManager();
+    public List<OrderHeader> findByDateRange(String startDate, String endDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate start = LocalDate.parse(startDate, formatter);
+        LocalDate end = LocalDate.parse(endDate, formatter);
 
-        try {
-            return em.createQuery("from OrderHeader", OrderHeader.class).getResultList(); // Lấy tất cả
-        } finally {
-            em.close();
-        }
+        String jpql = "SELECT o FROM OrderHeader o WHERE o.orderDate BETWEEN :start AND :end";
+        TypedQuery<OrderHeader> query = em.createQuery(jpql, OrderHeader.class);
+        query.setParameter("start", start);
+        query.setParameter("end", end);
+        return query.getResultList();
     }
 
-    /**
-     * Update an existing OrderHeader
-     */
-    public void update(OrderHeader orderHeader) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.merge(orderHeader); // Cập nhật thông tin
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
-    }
-
-    /**
-     * Delete an OrderHeader by ID
-     */
-    public void delete(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            OrderHeader orderHeader = em.find(OrderHeader.class, id);
-            if (orderHeader != null) {
-                em.remove(orderHeader); // Xóa thông tin
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    public List<OrderHeader> findPendingOrders() {
+        String jpql = "SELECT o FROM OrderHeader o WHERE o.status = 'PENDING'";
+        TypedQuery<OrderHeader> query = em.createQuery(jpql, OrderHeader.class);
+        return query.getResultList();
     }
 }

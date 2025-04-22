@@ -1,100 +1,26 @@
 package dao;
 
+import jakarta.persistence.TypedQuery;
 import model.Vendor;
-import utils.JPAUtil;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 
 import java.util.List;
 
-public class VendorDAO {
-
-    /**
-     * Create or Save a new Vendor
-     */
-    public void save(Vendor vendor) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.persist(vendor); // Lưu mới
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+public class VendorDAO extends GenericDAOImpl<Vendor, Integer> {
+    public VendorDAO() {
+        super(Vendor.class);
     }
 
-    /**
-     * Read: Find a Vendor by ID
-     */
-    public Vendor findById(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.find(Vendor.class, id); // Tìm Vendor theo ID
-        } finally {
-            em.close();
-        }
+    // TODO: Custom methods here
+    public List<Vendor> findByIngredientId(Integer ingredientId) {
+        String jpql = "SELECT v FROM Vendor v JOIN v.ingredients i WHERE i.id = :ingredientId";
+        TypedQuery<Vendor> query = em.createQuery(jpql, Vendor.class);
+        query.setParameter("ingredientId", ingredientId);
+        return query.getResultList();
     }
 
-    /**
-     * Read: Get all Vendors
-     */
-    public List<Vendor> findAll() {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.createQuery("from Vendor", Vendor.class).getResultList(); // Lấy tất cả
-        } finally {
-            em.close();
-        }
-    }
-
-    /**
-     * Update an existing Vendor
-     */
-    public void update(Vendor vendor) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.merge(vendor); // Cập nhật thông tin
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
-    }
-
-    /**
-     * Delete a Vendor by ID
-     */
-    public void delete(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            Vendor vendor = em.find(Vendor.class, id);
-            if (vendor != null) {
-                em.remove(vendor); // Xóa thông tin
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    public List<Vendor> findActiveVendors() {
+        String jpql = "SELECT v FROM Vendor v WHERE v.status = 'ACTIVE'";
+        TypedQuery<Vendor> query = em.createQuery(jpql, Vendor.class);
+        return query.getResultList();
     }
 }

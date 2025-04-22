@@ -1,100 +1,50 @@
 package dao;
 
+import jakarta.persistence.TypedQuery;
+import model.OrderHeader;
 import model.PurchaseOrderHeader;
-import utils.JPAUtil;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class PurchaseOrderHeaderDAO {
+public class PurchaseOrderHeaderDAO extends GenericDAOImpl<PurchaseOrderHeader, Integer> {
+    public PurchaseOrderHeaderDAO() {
+        super(PurchaseOrderHeader.class);
+    }
 
+    // TODO: Custom methods here
     /**
-     * Create or Save a new PurchaseOrderHeader
+     * Tìm các phiếu nhập hàng theo nhà cung cấp
      */
-    public void save(PurchaseOrderHeader purchaseOrderHeader) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.persist(purchaseOrderHeader); // Lưu mới
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    public List<PurchaseOrderHeader> findByVendorId(Integer vendorId) {
+        String jpql = "SELECT p FROM PurchaseOrderHeader p WHERE p.vendor.id = :vendorId";
+        TypedQuery<PurchaseOrderHeader> query = em.createQuery(jpql, PurchaseOrderHeader.class);
+        query.setParameter("vendorId", vendorId);
+        return query.getResultList();
     }
 
     /**
-     * Read: Find a PurchaseOrderHeader by ID
+     * Tìm các phiếu nhập hàng theo khoảng ngày đặt hàng
      */
-    public PurchaseOrderHeader findById(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
+    public List<PurchaseOrderHeader> findByDateRange(String startDate, String endDate) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate start = LocalDate.parse(startDate, formatter);
+        LocalDate end = LocalDate.parse(endDate, formatter);
 
-        try {
-            return em.find(PurchaseOrderHeader.class, id); // Tìm PurchaseOrderHeader theo ID
-        } finally {
-            em.close();
-        }
+        String jpql = "SELECT p FROM PurchaseOrderHeader p WHERE p.orderDate BETWEEN :start AND :end";
+        TypedQuery<PurchaseOrderHeader> query = em.createQuery(jpql, PurchaseOrderHeader.class);
+        query.setParameter("start", start);
+        query.setParameter("end", end);
+        return query.getResultList();
     }
 
     /**
-     * Read: Get all PurchaseOrderHeaders
+     * Tìm các phiếu đang ở trạng thái chờ xử lý (giả định là 'PENDING')
      */
-    public List<PurchaseOrderHeader> findAll() {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.createQuery("from PurchaseOrderHeader", PurchaseOrderHeader.class).getResultList(); // Lấy tất cả
-        } finally {
-            em.close();
-        }
-    }
-
-    /**
-     * Update an existing PurchaseOrderHeader
-     */
-    public void update(PurchaseOrderHeader purchaseOrderHeader) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.merge(purchaseOrderHeader); // Cập nhật thông tin
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
-    }
-
-    /**
-     * Delete a PurchaseOrderHeader by ID
-     */
-    public void delete(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            PurchaseOrderHeader purchaseOrderHeader = em.find(PurchaseOrderHeader.class, id);
-            if (purchaseOrderHeader != null) {
-                em.remove(purchaseOrderHeader); // Xóa thông tin
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    public List<PurchaseOrderHeader> findPendingOrders() {
+        String jpql = "SELECT p FROM PurchaseOrderHeader p WHERE p.status = 'PENDING'";
+        TypedQuery<PurchaseOrderHeader> query = em.createQuery(jpql, PurchaseOrderHeader.class);
+        return query.getResultList();
     }
 }

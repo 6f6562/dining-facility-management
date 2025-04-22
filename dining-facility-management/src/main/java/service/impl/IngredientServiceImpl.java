@@ -1,100 +1,43 @@
 package service.impl;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
+import dao.IngredientDAO;
 import model.Ingredient;
-import utils.JPAUtil;
+import service.IngredientService;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class IngredientServiceImpl {
+public class IngredientServiceImpl extends UnicastRemoteObject implements IngredientService {
+    private final IngredientDAO ingredientDAO;
 
-    /**
-     * Create or Save a new Ingredient
-     */
-    public void save(Ingredient ingredient) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.persist(ingredient); // Lưu mới
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    public IngredientServiceImpl() throws RemoteException {
+        super();
+        this.ingredientDAO = new IngredientDAO();
     }
 
-    /**
-     * Read: Find an Ingredient by ID
-     */
-    public Ingredient findById(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.find(Ingredient.class, id); // Tìm Ingredient theo ID
-        } finally {
-            em.close();
-        }
+    @Override
+    public void create(Ingredient ingredient) throws RemoteException {
+        ingredientDAO.create(ingredient);
     }
 
-    /**
-     * Read: Get all Ingredients
-     */
-    public List<Ingredient> findAll() {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.createQuery("from Ingredient", Ingredient.class).getResultList(); // Lấy tất cả
-        } finally {
-            em.close();
-        }
+    @Override
+    public void update(Ingredient ingredient) throws RemoteException {
+        ingredientDAO.update(ingredient);
     }
 
-    /**
-     * Update an existing Ingredient
-     */
-    public void update(Ingredient ingredient) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.merge(ingredient); // Cập nhật thông tin
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    @Override
+    public void deleteById(Integer id) throws RemoteException {
+        ingredientDAO.deleteById(id);
     }
 
-    /**
-     * Delete an Ingredient by ID
-     */
-    public void delete(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
+    @Override
+    public Ingredient findById(Integer id) throws RemoteException {
+        return ingredientDAO.findById(id);
+    }
 
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            Ingredient ingredient = em.find(Ingredient.class, id);
-            if (ingredient != null) {
-                em.remove(ingredient); // Xóa thông tin
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    @Override
+    public List<Ingredient> findAll() throws RemoteException {
+        return ingredientDAO.findAll();
     }
 }

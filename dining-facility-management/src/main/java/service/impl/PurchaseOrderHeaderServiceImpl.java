@@ -1,100 +1,58 @@
 package service.impl;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
+import dao.PurchaseOrderHeaderDAO;
 import model.PurchaseOrderHeader;
-import utils.JPAUtil;
+import service.PurchaseOrderHeaderService;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class PurchaseOrderHeaderServiceImpl {
+public class PurchaseOrderHeaderServiceImpl extends UnicastRemoteObject implements PurchaseOrderHeaderService {
+    private final PurchaseOrderHeaderDAO purchaseOrderHeaderDAO;
 
-    /**
-     * Create or Save a new PurchaseOrderHeader
-     */
-    public void save(PurchaseOrderHeader purchaseOrderHeader) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.persist(purchaseOrderHeader); // Lưu mới
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    public PurchaseOrderHeaderServiceImpl() throws RemoteException {
+        super();
+        this.purchaseOrderHeaderDAO = new PurchaseOrderHeaderDAO();
     }
 
-    /**
-     * Read: Find a PurchaseOrderHeader by ID
-     */
-    public PurchaseOrderHeader findById(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.find(PurchaseOrderHeader.class, id); // Tìm PurchaseOrderHeader theo ID
-        } finally {
-            em.close();
-        }
+    @Override
+    public void create(PurchaseOrderHeader purchaseOrderHeader) throws RemoteException {
+        purchaseOrderHeaderDAO.create(purchaseOrderHeader);
     }
 
-    /**
-     * Read: Get all PurchaseOrderHeaders
-     */
-    public List<PurchaseOrderHeader> findAll() {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.createQuery("from PurchaseOrderHeader", PurchaseOrderHeader.class).getResultList(); // Lấy tất cả
-        } finally {
-            em.close();
-        }
+    @Override
+    public void update(PurchaseOrderHeader purchaseOrderHeader) throws RemoteException {
+        purchaseOrderHeaderDAO.update(purchaseOrderHeader);
     }
 
-    /**
-     * Update an existing PurchaseOrderHeader
-     */
-    public void update(PurchaseOrderHeader purchaseOrderHeader) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.merge(purchaseOrderHeader); // Cập nhật thông tin
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    @Override
+    public void deleteById(Integer id) throws RemoteException {
+        purchaseOrderHeaderDAO.deleteById(id);
     }
 
-    /**
-     * Delete a PurchaseOrderHeader by ID
-     */
-    public void delete(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
+    @Override
+    public PurchaseOrderHeader findById(Integer id) throws RemoteException {
+        return purchaseOrderHeaderDAO.findById(id);
+    }
 
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            PurchaseOrderHeader purchaseOrderHeader = em.find(PurchaseOrderHeader.class, id);
-            if (purchaseOrderHeader != null) {
-                em.remove(purchaseOrderHeader); // Xóa thông tin
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    @Override
+    public List<PurchaseOrderHeader> findAll() throws RemoteException {
+        return purchaseOrderHeaderDAO.findAll();
+    }
+
+    @Override
+    public List<PurchaseOrderHeader> findByVendorId(Integer vendorId) throws RemoteException {
+        return purchaseOrderHeaderDAO.findByVendorId(vendorId);
+    }
+
+    @Override
+    public List<PurchaseOrderHeader> findByDateRange(String startDate, String endDate) throws RemoteException {
+        return purchaseOrderHeaderDAO.findByDateRange(startDate, endDate);
+    }
+
+    @Override
+    public List<PurchaseOrderHeader> findPendingOrders() throws RemoteException {
+        return purchaseOrderHeaderDAO.findPendingOrders();
     }
 }

@@ -1,100 +1,53 @@
 package service.impl;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityTransaction;
+import dao.OrderDetailDAO;
 import model.OrderDetail;
-import utils.JPAUtil;
+import service.OrderDetailService;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class OrderDetailServiceImpl {
+public class OrderDetailServiceImpl extends UnicastRemoteObject implements OrderDetailService {
+    private final OrderDetailDAO orderDetailDAO;
 
-    /**
-     * Create or Save a new OrderDetail
-     */
-    public void save(OrderDetail orderDetail) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.persist(orderDetail); // Lưu mới
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    public OrderDetailServiceImpl() throws RemoteException {
+        super();
+        this.orderDetailDAO = new OrderDetailDAO();
     }
 
-    /**
-     * Read: Find an OrderDetail by ID
-     */
-    public OrderDetail findById(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.find(OrderDetail.class, id); // Tìm OrderDetail theo ID
-        } finally {
-            em.close();
-        }
+    @Override
+    public void create(OrderDetail orderDetail) throws RemoteException {
+        orderDetailDAO.create(orderDetail);
     }
 
-    /**
-     * Read: Get all OrderDetails
-     */
-    public List<OrderDetail> findAll() {
-        EntityManager em = JPAUtil.getEntityManager();
-
-        try {
-            return em.createQuery("from OrderDetail", OrderDetail.class).getResultList(); // Lấy tất cả
-        } finally {
-            em.close();
-        }
+    @Override
+    public void update(OrderDetail orderDetail) throws RemoteException {
+        orderDetailDAO.update(orderDetail);
     }
 
-    /**
-     * Update an existing OrderDetail
-     */
-    public void update(OrderDetail orderDetail) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
-
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            em.merge(orderDetail); // Cập nhật thông tin
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    @Override
+    public void deleteById(Integer id) throws RemoteException {
+        orderDetailDAO.deleteById(id);
     }
 
-    /**
-     * Delete an OrderDetail by ID
-     */
-    public void delete(int id) {
-        EntityManager em = JPAUtil.getEntityManager();
-        EntityTransaction transaction = null;
+    @Override
+    public OrderDetail findById(Integer id) throws RemoteException {
+        return orderDetailDAO.findById(id);
+    }
 
-        try {
-            transaction = em.getTransaction();
-            transaction.begin();
-            OrderDetail orderDetail = em.find(OrderDetail.class, id);
-            if (orderDetail != null) {
-                em.remove(orderDetail); // Xóa thông tin
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        } finally {
-            em.close();
-        }
+    @Override
+    public List<OrderDetail> findAll() throws RemoteException {
+        return orderDetailDAO.findAll();
+    }
+
+    @Override
+    public List<OrderDetail> findByOrderHeaderId(Integer orderHeaderId) throws RemoteException {
+        return orderDetailDAO.findByOrderHeaderId(orderHeaderId);
+    }
+
+    @Override
+    public List<OrderDetail> findByDishId(Integer dishId) throws RemoteException {
+        return orderDetailDAO.findByDishId(dishId);
     }
 }
