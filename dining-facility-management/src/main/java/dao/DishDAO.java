@@ -1,10 +1,9 @@
 package dao;
 
-import entity.Dish;
-import entity.JPAUtil;
+import model.Dish;
+import utils.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Persistence;
 
 import java.util.List;
 
@@ -27,6 +26,9 @@ public class DishDAO {
         }
     }
 
+    /**
+     * Read: Find a Dish by ID
+     */
     public Dish findById(int id) {
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -37,6 +39,9 @@ public class DishDAO {
         }
     }
 
+    /**
+     * Read: Get all Dishes
+     */
     public List<Dish> findAll() {
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -47,6 +52,9 @@ public class DishDAO {
         }
     }
 
+    /**
+     * Update an existing Dish
+     */
     public void update(Dish dish) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = null;
@@ -64,6 +72,9 @@ public class DishDAO {
         }
     }
 
+    /**
+     * Delete a Dish by ID
+     */
     public void delete(int id) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = null;

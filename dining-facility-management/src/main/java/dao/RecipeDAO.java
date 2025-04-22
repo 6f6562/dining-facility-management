@@ -1,15 +1,17 @@
 package dao;
 
-import entity.JPAUtil;
-import entity.Recipe;
+import model.Recipe;
+import utils.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Persistence;
 
 import java.util.List;
 
 public class RecipeDAO {
 
+    /**
+     * Create or Save a new Recipe
+     */
     public void save(Recipe recipe) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = null;
@@ -27,6 +29,9 @@ public class RecipeDAO {
         }
     }
 
+    /**
+     * Read: Find a Recipe by ID
+     */
     public Recipe findById(int id) {
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -37,6 +42,9 @@ public class RecipeDAO {
         }
     }
 
+    /**
+     * Read: Get all Recipes
+     */
     public List<Recipe> findAll() {
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -47,6 +55,9 @@ public class RecipeDAO {
         }
     }
 
+    /**
+     * Update an existing Recipe
+     */
     public void update(Recipe recipe) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = null;
@@ -64,6 +75,9 @@ public class RecipeDAO {
         }
     }
 
+    /**
+     * Delete a Recipe by ID
+     */
     public void delete(int id) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = null;

@@ -1,15 +1,17 @@
 package dao;
 
-import entity.JPAUtil;
-import entity.PurchaseOrderDetail;
+import model.PurchaseOrderDetail;
+import utils.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Persistence;
 
 import java.util.List;
 
 public class PurchaseOrderDetailDAO {
 
+    /**
+     * Create or Save a new PurchaseOrderDetail
+     */
     public void save(PurchaseOrderDetail purchaseOrderDetail) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = null;
@@ -27,6 +29,9 @@ public class PurchaseOrderDetailDAO {
         }
     }
 
+    /**
+     * Read: Find a PurchaseOrderDetail by ID
+     */
     public PurchaseOrderDetail findById(int id) {
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -37,6 +42,9 @@ public class PurchaseOrderDetailDAO {
         }
     }
 
+    /**
+     * Read: Get all PurchaseOrderDetails
+     */
     public List<PurchaseOrderDetail> findAll() {
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -47,6 +55,9 @@ public class PurchaseOrderDetailDAO {
         }
     }
 
+    /**
+     * Update an existing PurchaseOrderDetail
+     */
     public void update(PurchaseOrderDetail purchaseOrderDetail) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = null;
@@ -64,6 +75,9 @@ public class PurchaseOrderDetailDAO {
         }
     }
 
+    /**
+     * Delete a PurchaseOrderDetail by ID
+     */
     public void delete(int id) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = null;

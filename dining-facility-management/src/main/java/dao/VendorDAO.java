@@ -1,15 +1,17 @@
 package dao;
 
-import entity.JPAUtil;
-import entity.Vendor;
+import model.Vendor;
+import utils.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Persistence;
 
 import java.util.List;
 
 public class VendorDAO {
 
+    /**
+     * Create or Save a new Vendor
+     */
     public void save(Vendor vendor) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = null;
@@ -27,6 +29,9 @@ public class VendorDAO {
         }
     }
 
+    /**
+     * Read: Find a Vendor by ID
+     */
     public Vendor findById(int id) {
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -37,6 +42,9 @@ public class VendorDAO {
         }
     }
 
+    /**
+     * Read: Get all Vendors
+     */
     public List<Vendor> findAll() {
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -47,6 +55,9 @@ public class VendorDAO {
         }
     }
 
+    /**
+     * Update an existing Vendor
+     */
     public void update(Vendor vendor) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = null;
@@ -64,6 +75,9 @@ public class VendorDAO {
         }
     }
 
+    /**
+     * Delete a Vendor by ID
+     */
     public void delete(int id) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = null;

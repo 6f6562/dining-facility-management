@@ -1,15 +1,17 @@
 package dao;
 
-import entity.JPAUtil;
-import entity.OrderDetail;
+import model.OrderDetail;
+import utils.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Persistence;
 
 import java.util.List;
 
 public class OrderDetailDAO {
 
+    /**
+     * Create or Save a new OrderDetail
+     */
     public void save(OrderDetail orderDetail) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = null;
@@ -27,6 +29,9 @@ public class OrderDetailDAO {
         }
     }
 
+    /**
+     * Read: Find an OrderDetail by ID
+     */
     public OrderDetail findById(int id) {
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -37,6 +42,9 @@ public class OrderDetailDAO {
         }
     }
 
+    /**
+     * Read: Get all OrderDetails
+     */
     public List<OrderDetail> findAll() {
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -47,6 +55,9 @@ public class OrderDetailDAO {
         }
     }
 
+    /**
+     * Update an existing OrderDetail
+     */
     public void update(OrderDetail orderDetail) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = null;
@@ -64,6 +75,9 @@ public class OrderDetailDAO {
         }
     }
 
+    /**
+     * Delete an OrderDetail by ID
+     */
     public void delete(int id) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = null;

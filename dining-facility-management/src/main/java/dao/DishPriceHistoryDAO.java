@@ -1,15 +1,17 @@
 package dao;
 
-import entity.DishPriceHistory;
-import entity.JPAUtil;
+import model.DishPriceHistory;
+import utils.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Persistence;
 
 import java.util.List;
 
 public class DishPriceHistoryDAO {
 
+    /**
+     * Create or Save a new DishPriceHistory
+     */
     public void save(DishPriceHistory dishPriceHistory) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = null;
@@ -27,6 +29,9 @@ public class DishPriceHistoryDAO {
         }
     }
 
+    /**
+     * Read: Find a DishPriceHistory by ID
+     */
     public DishPriceHistory findById(int id) {
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -37,6 +42,9 @@ public class DishPriceHistoryDAO {
         }
     }
 
+    /**
+     * Read: Get all DishPriceHistories
+     */
     public List<DishPriceHistory> findAll() {
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -47,6 +55,9 @@ public class DishPriceHistoryDAO {
         }
     }
 
+    /**
+     * Update an existing DishPriceHistory
+     */
     public void update(DishPriceHistory dishPriceHistory) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = null;
@@ -64,6 +75,9 @@ public class DishPriceHistoryDAO {
         }
     }
 
+    /**
+     * Delete a DishPriceHistory by ID
+     */
     public void delete(int id) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = null;

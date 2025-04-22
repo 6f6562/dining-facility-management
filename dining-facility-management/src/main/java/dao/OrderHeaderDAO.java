@@ -1,15 +1,17 @@
 package dao;
 
-import entity.JPAUtil;
-import entity.OrderHeader;
+import model.OrderHeader;
+import utils.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Persistence;
 
 import java.util.List;
 
 public class OrderHeaderDAO {
 
+    /**
+     * Create or Save a new OrderHeader
+     */
     public void save(OrderHeader orderHeader) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = null;
@@ -27,6 +29,9 @@ public class OrderHeaderDAO {
         }
     }
 
+    /**
+     * Read: Find an OrderHeader by ID
+     */
     public OrderHeader findById(int id) {
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -37,6 +42,9 @@ public class OrderHeaderDAO {
         }
     }
 
+    /**
+     * Read: Get all OrderHeaders
+     */
     public List<OrderHeader> findAll() {
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -47,6 +55,9 @@ public class OrderHeaderDAO {
         }
     }
 
+    /**
+     * Update an existing OrderHeader
+     */
     public void update(OrderHeader orderHeader) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = null;
@@ -64,6 +75,9 @@ public class OrderHeaderDAO {
         }
     }
 
+    /**
+     * Delete an OrderHeader by ID
+     */
     public void delete(int id) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = null;

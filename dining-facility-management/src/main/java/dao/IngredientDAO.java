@@ -1,15 +1,17 @@
 package dao;
 
-import entity.Ingredient;
-import entity.JPAUtil;
+import model.Ingredient;
+import utils.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Persistence;
 
 import java.util.List;
 
 public class IngredientDAO {
 
+    /**
+     * Create or Save a new Ingredient
+     */
     public void save(Ingredient ingredient) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = null;
@@ -27,6 +29,9 @@ public class IngredientDAO {
         }
     }
 
+    /**
+     * Read: Find an Ingredient by ID
+     */
     public Ingredient findById(int id) {
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -37,6 +42,9 @@ public class IngredientDAO {
         }
     }
 
+    /**
+     * Read: Get all Ingredients
+     */
     public List<Ingredient> findAll() {
         EntityManager em = JPAUtil.getEntityManager();
 
@@ -47,6 +55,9 @@ public class IngredientDAO {
         }
     }
 
+    /**
+     * Update an existing Ingredient
+     */
     public void update(Ingredient ingredient) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = null;
@@ -64,6 +75,9 @@ public class IngredientDAO {
         }
     }
 
+    /**
+     * Delete an Ingredient by ID
+     */
     public void delete(int id) {
         EntityManager em = JPAUtil.getEntityManager();
         EntityTransaction transaction = null;

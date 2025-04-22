@@ -1,10 +1,9 @@
 package dao;
 
-import entity.DiningTable;
-import entity.JPAUtil;
+import model.DiningTable;
+import utils.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Persistence;
 
 import java.util.List;
 
