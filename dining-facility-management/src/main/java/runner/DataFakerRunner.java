@@ -15,7 +15,7 @@ public class DataFakerRunner {
     public static void main(String[] args) {
         // Khởi tạo Faker và EntityManager
         Faker faker = new Faker();
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("mariadb-pu");
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("mssql-pu");
         EntityManager em = emf.createEntityManager();
 
         em.getTransaction().begin();

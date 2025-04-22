@@ -6,7 +6,7 @@ import jakarta.persistence.Persistence;
 
 public class JPAUtil {
     private static final EntityManagerFactory ENTITY_MANAGER_FACTORY =
-            Persistence.createEntityManagerFactory("mariadb-pu");
+            Persistence.createEntityManagerFactory("mssql-pu");
 
     public static EntityManager getEntityManager() {
         return ENTITY_MANAGER_FACTORY.createEntityManager();
