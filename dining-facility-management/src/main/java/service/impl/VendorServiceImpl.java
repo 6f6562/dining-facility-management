@@ -11,6 +11,11 @@ import java.util.List;
 public class VendorServiceImpl extends UnicastRemoteObject implements VendorService {
     private final VendorDAO vendorDAO;
 
+    public VendorServiceImpl() throws RemoteException {
+        super();
+        this.vendorDAO = new VendorDAO();
+    }
+
     public VendorServiceImpl(VendorDAO vendorDAO) throws RemoteException {
         super();
         this.vendorDAO = vendorDAO;

@@ -12,6 +12,11 @@ public class DishPriceHistoryServiceImpl extends UnicastRemoteObject implements 
 
     private final DishPriceHistoryDAO dishPriceHistoryDAO;
 
+    public DishPriceHistoryServiceImpl() throws RemoteException {
+        super();
+        this.dishPriceHistoryDAO = new DishPriceHistoryDAO();
+    }
+
     public DishPriceHistoryServiceImpl(DishPriceHistoryDAO dishPriceHistoryDAO) throws RemoteException {
         super();
         this.dishPriceHistoryDAO = dishPriceHistoryDAO;

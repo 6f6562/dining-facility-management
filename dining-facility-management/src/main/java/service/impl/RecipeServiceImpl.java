@@ -11,6 +11,11 @@ import java.util.List;
 public class RecipeServiceImpl extends UnicastRemoteObject implements RecipeService {
     private final RecipeDAO recipeDAO;
 
+    public RecipeServiceImpl() throws RemoteException {
+        super();
+        this.recipeDAO = new RecipeDAO();
+    }
+
     public RecipeServiceImpl(RecipeDAO recipeDAO) throws RemoteException {
         super();
         this.recipeDAO = recipeDAO;

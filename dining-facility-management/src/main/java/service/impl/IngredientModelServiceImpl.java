@@ -12,6 +12,11 @@ public class IngredientModelServiceImpl extends UnicastRemoteObject implements I
 
     private final IngredientModelDAO ingredientModelDAO;
 
+    public IngredientModelServiceImpl() throws RemoteException {
+        super();
+        this.ingredientModelDAO = new IngredientModelDAO();
+    }
+
     public IngredientModelServiceImpl(IngredientModelDAO ingredientModelDAO) throws RemoteException {
         super();
         this.ingredientModelDAO = ingredientModelDAO;

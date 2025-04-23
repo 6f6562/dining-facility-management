@@ -12,6 +12,11 @@ import java.util.Optional;
 public class IngredientServiceImpl extends UnicastRemoteObject implements IngredientService {
     private final IngredientDAO ingredientDAO;
 
+    public IngredientServiceImpl() throws RemoteException {
+        super();
+        this.ingredientDAO = new IngredientDAO();
+    }
+
     public IngredientServiceImpl(IngredientDAO ingredientDAO) throws RemoteException {
         super();
         this.ingredientDAO = ingredientDAO;

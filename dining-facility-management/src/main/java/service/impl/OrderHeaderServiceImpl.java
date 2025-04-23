@@ -11,6 +11,11 @@ import java.util.List;
 public class OrderHeaderServiceImpl extends UnicastRemoteObject implements OrderHeaderService {
     private final OrderHeaderDAO orderHeaderDAO;
 
+    public OrderHeaderServiceImpl() throws RemoteException {
+        super();
+        this.orderHeaderDAO = new OrderHeaderDAO();
+    }
+
     public OrderHeaderServiceImpl(OrderHeaderDAO orderHeaderDAO) throws RemoteException {
         super();
         this.orderHeaderDAO = orderHeaderDAO;

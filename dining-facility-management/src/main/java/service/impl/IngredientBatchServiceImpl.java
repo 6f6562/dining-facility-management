@@ -12,6 +12,11 @@ public class IngredientBatchServiceImpl extends UnicastRemoteObject implements I
 
     private final IngredientBatchDAO ingredientBatchDAO;
 
+    public IngredientBatchServiceImpl() throws RemoteException {
+        super();
+        this.ingredientBatchDAO = new IngredientBatchDAO();
+    }
+
     public IngredientBatchServiceImpl(IngredientBatchDAO ingredientBatchDAO) throws RemoteException {
         super();
         this.ingredientBatchDAO = ingredientBatchDAO;

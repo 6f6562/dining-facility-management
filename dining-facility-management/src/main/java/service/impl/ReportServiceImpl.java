@@ -13,6 +13,11 @@ import java.util.List;
 public class ReportServiceImpl extends UnicastRemoteObject implements ReportService {
     private final ReportDAO reportDAO;
 
+    public ReportServiceImpl() throws RemoteException {
+        super();
+        this.reportDAO = new ReportDAO();
+    }
+
     public ReportServiceImpl(ReportDAO reportDAO) throws RemoteException {
         super();
         this.reportDAO = reportDAO;

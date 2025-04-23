@@ -11,6 +11,11 @@ import java.util.List;
 public class PaymentServiceImpl extends UnicastRemoteObject implements PaymentService {
     private final PaymentDAO paymentDAO;
 
+    public PaymentServiceImpl() throws RemoteException {
+        super();
+        this.paymentDAO = new PaymentDAO();
+    }
+
     public PaymentServiceImpl(PaymentDAO paymentDAO) throws RemoteException {
         super();
         this.paymentDAO = paymentDAO;
