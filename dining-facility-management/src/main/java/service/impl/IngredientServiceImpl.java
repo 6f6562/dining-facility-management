@@ -7,6 +7,7 @@ import service.IngredientService;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+import java.util.Optional;
 
 public class IngredientServiceImpl extends UnicastRemoteObject implements IngredientService {
     private final IngredientDAO ingredientDAO;
@@ -39,5 +40,11 @@ public class IngredientServiceImpl extends UnicastRemoteObject implements Ingred
     @Override
     public List<Ingredient> findAll() throws RemoteException {
         return ingredientDAO.findAll();
+    }
+
+    @Override
+    public Ingredient getTopIngredientByModelIdOrderByStockQuantity(int modelId) throws RemoteException{
+        return ingredientDAO.findTopByIngredientModelIdOrderByStockQuantityAsc(modelId)
+                .orElse(null); // hoặc throw custom exception nếu thích
     }
 }

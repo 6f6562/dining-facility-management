@@ -169,6 +169,16 @@ public class AdminViewRunner extends JFrame {
                 button.setForeground(Color.WHITE);
                 button.setFocusPainted(false);
                 button.setBorderPainted(false);
+                
+                // Chuyển text sang tiếng Việt
+                String buttonText = button.getText().toLowerCase();
+                switch (buttonText) {
+                    case "add": button.setText("Thêm"); break;
+                    case "update": button.setText("Cập nhật"); break;
+                    case "delete": button.setText("Xóa"); break;
+                    case "refresh": button.setText("Làm mới"); break;
+                    case "clear": button.setText("Xóa trắng"); break;
+                }
             } else if (comp instanceof JTextField) {
                 JTextField textField = (JTextField) comp;
                 textField.setFont(INPUT_FONT);
@@ -182,6 +192,43 @@ public class AdminViewRunner extends JFrame {
             } else if (comp instanceof JLabel) {
                 JLabel label = (JLabel) comp;
                 label.setFont(LABEL_FONT);
+                
+                // Chuyển text sang tiếng Việt
+                String labelText = label.getText().toLowerCase();
+                switch (labelText) {
+                    case "id": label.setText("Mã"); break;
+                    case "name": label.setText("Tên"); break;
+                    case "description": label.setText("Mô tả"); break;
+                    case "price": label.setText("Giá"); break;
+                    case "status": label.setText("Trạng thái"); break;
+                    case "date": label.setText("Ngày"); break;
+                    case "time": label.setText("Thời gian"); break;
+                    case "quantity": label.setText("Số lượng"); break;
+                    case "unit": label.setText("Đơn vị"); break;
+                    case "type": label.setText("Loại"); break;
+                    case "active": label.setText("Hoạt động"); break;
+                    case "priority": label.setText("Ưu tiên"); break;
+                    case "address": label.setText("Địa chỉ"); break;
+                    case "phone": label.setText("Số điện thoại"); break;
+                    case "email": label.setText("Email"); break;
+                    case "total": label.setText("Tổng tiền"); break;
+                    case "payment method": label.setText("Phương thức thanh toán"); break;
+                    case "payment status": label.setText("Trạng thái thanh toán"); break;
+                    case "order date": label.setText("Ngày đặt"); break;
+                    case "ship date": label.setText("Ngày giao"); break;
+                    case "expiry date": label.setText("Ngày hết hạn"); break;
+                    case "safety stock": label.setText("Tồn kho an toàn"); break;
+                    case "reorder point": label.setText("Điểm đặt hàng"); break;
+                    case "stock quantity": label.setText("Số lượng tồn"); break;
+                    case "received date": label.setText("Ngày nhận"); break;
+                    case "vendor": label.setText("Nhà cung cấp"); break;
+                    case "ingredient": label.setText("Nguyên liệu"); break;
+                    case "dish": label.setText("Món ăn"); break;
+                    case "recipe": label.setText("Công thức"); break;
+                    case "table": label.setText("Bàn"); break;
+                    case "capacity": label.setText("Sức chứa"); break;
+                    case "location": label.setText("Vị trí"); break;
+                }
             } else if (comp instanceof JTable) {
                 JTable table = (JTable) comp;
                 table.setFont(TABLE_ROW_FONT);
@@ -189,11 +236,105 @@ public class AdminViewRunner extends JFrame {
                 table.getTableHeader().setFont(TABLE_HEADER_FONT);
                 table.getTableHeader().setBackground(HEADER_COLOR);
                 table.getTableHeader().setForeground(Color.BLACK);
+                
+                // Chuyển tên cột sang tiếng Việt
+                for (int i = 0; i < table.getColumnCount(); i++) {
+                    String columnName = table.getColumnName(i).toLowerCase();
+                    switch (columnName) {
+                        case "id": table.getColumnModel().getColumn(i).setHeaderValue("Mã"); break;
+                        case "name": table.getColumnModel().getColumn(i).setHeaderValue("Tên"); break;
+                        case "description": table.getColumnModel().getColumn(i).setHeaderValue("Mô tả"); break;
+                        case "price": table.getColumnModel().getColumn(i).setHeaderValue("Giá"); break;
+                        case "status": table.getColumnModel().getColumn(i).setHeaderValue("Trạng thái"); break;
+                        case "date": table.getColumnModel().getColumn(i).setHeaderValue("Ngày"); break;
+                        case "time": table.getColumnModel().getColumn(i).setHeaderValue("Thời gian"); break;
+                        case "quantity": table.getColumnModel().getColumn(i).setHeaderValue("Số lượng"); break;
+                        case "unit": table.getColumnModel().getColumn(i).setHeaderValue("Đơn vị"); break;
+                        case "type": table.getColumnModel().getColumn(i).setHeaderValue("Loại"); break;
+                        case "active": table.getColumnModel().getColumn(i).setHeaderValue("Hoạt động"); break;
+                        case "priority": table.getColumnModel().getColumn(i).setHeaderValue("Ưu tiên"); break;
+                        case "address": table.getColumnModel().getColumn(i).setHeaderValue("Địa chỉ"); break;
+                        case "phone": table.getColumnModel().getColumn(i).setHeaderValue("Số điện thoại"); break;
+                        case "email": table.getColumnModel().getColumn(i).setHeaderValue("Email"); break;
+                        case "total": table.getColumnModel().getColumn(i).setHeaderValue("Tổng tiền"); break;
+                        case "payment method": table.getColumnModel().getColumn(i).setHeaderValue("Phương thức thanh toán"); break;
+                        case "payment status": table.getColumnModel().getColumn(i).setHeaderValue("Trạng thái thanh toán"); break;
+                        case "order date": table.getColumnModel().getColumn(i).setHeaderValue("Ngày đặt"); break;
+                        case "ship date": table.getColumnModel().getColumn(i).setHeaderValue("Ngày giao"); break;
+                        case "expiry date": table.getColumnModel().getColumn(i).setHeaderValue("Ngày hết hạn"); break;
+                        case "safety stock": table.getColumnModel().getColumn(i).setHeaderValue("Tồn kho an toàn"); break;
+                        case "reorder point": table.getColumnModel().getColumn(i).setHeaderValue("Điểm đặt hàng"); break;
+                        case "stock quantity": table.getColumnModel().getColumn(i).setHeaderValue("Số lượng tồn"); break;
+                        case "received date": table.getColumnModel().getColumn(i).setHeaderValue("Ngày nhận"); break;
+                        case "vendor": table.getColumnModel().getColumn(i).setHeaderValue("Nhà cung cấp"); break;
+                        case "ingredient": table.getColumnModel().getColumn(i).setHeaderValue("Nguyên liệu"); break;
+                        case "dish": table.getColumnModel().getColumn(i).setHeaderValue("Món ăn"); break;
+                        case "recipe": table.getColumnModel().getColumn(i).setHeaderValue("Công thức"); break;
+                        case "table": table.getColumnModel().getColumn(i).setHeaderValue("Bàn"); break;
+                        case "capacity": table.getColumnModel().getColumn(i).setHeaderValue("Sức chứa"); break;
+                        case "location": table.getColumnModel().getColumn(i).setHeaderValue("Vị trí"); break;
+                    }
+                }
             } else if (comp instanceof JPanel) {
                 // Đệ quy áp dụng style cho các panel con
                 applyPanelStyle((JPanel) comp);
             }
         }
+        
+        // Tìm panel chứa các nút CRUD
+        for (Component comp : panel.getComponents()) {
+            if (comp instanceof JPanel) {
+                JPanel buttonPanel = (JPanel) comp;
+                // Kiểm tra xem panel có chứa các nút CRUD không
+                boolean hasCrudButtons = false;
+                for (Component button : buttonPanel.getComponents()) {
+                    if (button instanceof JButton) {
+                        String buttonText = ((JButton) button).getText().toLowerCase();
+                        if (buttonText.equals("thêm") || buttonText.equals("cập nhật") || 
+                            buttonText.equals("xóa") || buttonText.equals("làm mới")) {
+                            hasCrudButtons = true;
+                            break;
+                        }
+                    }
+                }
+                
+                // Nếu tìm thấy panel chứa nút CRUD, thêm nút Xóa trắng
+                if (hasCrudButtons) {
+                    JButton clearButton = new JButton("Xóa trắng");
+                    clearButton.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+                    clearButton.setFont(BUTTON_FONT);
+                    clearButton.setBackground(PRIMARY_COLOR);
+                    clearButton.setForeground(Color.WHITE);
+                    clearButton.setFocusPainted(false);
+                    clearButton.setBorderPainted(false);
+                    clearButton.addActionListener(e -> clearForm(panel));
+                    buttonPanel.add(clearButton);
+                }
+            }
+        }
+    }
+    
+    private void clearForm(JPanel panel) {
+        for (Component comp : panel.getComponents()) {
+            if (comp instanceof JTextField) {
+                ((JTextField) comp).setText("");
+            } else if (comp instanceof JTextArea) {
+                ((JTextArea) comp).setText("");
+            } else if (comp instanceof JComboBox) {
+                ((JComboBox<?>) comp).setSelectedIndex(0);
+            } else if (comp instanceof JCheckBox) {
+                ((JCheckBox) comp).setSelected(false);
+            } else if (comp instanceof JSpinner) {
+                ((JSpinner) comp).setValue(0);
+            } else if (comp instanceof JPanel) {
+                clearForm((JPanel) comp);
+            }
+        }
+        
+        JOptionPane.showMessageDialog(this,
+            "Đã xóa trắng form thành công!",
+            "Thông báo",
+            JOptionPane.INFORMATION_MESSAGE);
     }
     
     private void showAboutDialog() {
