@@ -11,9 +11,9 @@ import java.util.List;
 public class DiningTableServiceImpl extends UnicastRemoteObject implements DiningTableService {
     private final DiningTableDAO diningTableDAO;
 
-    public DiningTableServiceImpl() throws RemoteException {
+    public DiningTableServiceImpl(DiningTableDAO diningTableDAO) throws RemoteException {
         super();
-        this.diningTableDAO = new DiningTableDAO();
+        this.diningTableDAO = diningTableDAO;
     }
 
     @Override

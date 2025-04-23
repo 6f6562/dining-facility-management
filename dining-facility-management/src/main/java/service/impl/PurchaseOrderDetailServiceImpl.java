@@ -11,9 +11,9 @@ import java.util.List;
 public class PurchaseOrderDetailServiceImpl extends UnicastRemoteObject implements PurchaseOrderDetailService {
     private final PurchaseOrderDetailDAO purchaseOrderDetailDAO;
 
-    public PurchaseOrderDetailServiceImpl() throws RemoteException {
+    public PurchaseOrderDetailServiceImpl(PurchaseOrderDetailDAO purchaseOrderDetailDAO) throws RemoteException {
         super();
-        this.purchaseOrderDetailDAO = new PurchaseOrderDetailDAO();
+        this.purchaseOrderDetailDAO = purchaseOrderDetailDAO;
     }
 
     @Override

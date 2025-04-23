@@ -11,9 +11,9 @@ import java.util.List;
 public class IngredientServiceImpl extends UnicastRemoteObject implements IngredientService {
     private final IngredientDAO ingredientDAO;
 
-    public IngredientServiceImpl() throws RemoteException {
+    public IngredientServiceImpl(IngredientDAO ingredientDAO) throws RemoteException {
         super();
-        this.ingredientDAO = new IngredientDAO();
+        this.ingredientDAO = ingredientDAO;
     }
 
     @Override
