@@ -1,10 +1,7 @@
 package model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -14,11 +11,13 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Report {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "report_id")
+    @EqualsAndHashCode.Include
     private int id;
 
     @Column(name = "title", nullable = false)
@@ -38,4 +37,8 @@ public class Report {
 
     @Column(name = "content", columnDefinition = "TEXT")
     private String content;
+    @Override
+    public String toString() {
+        return ""+ title;
+    }
 } 

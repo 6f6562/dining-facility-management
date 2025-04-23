@@ -1,10 +1,7 @@
 package model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -14,11 +11,13 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class IngredientBatch {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ingredient_batch_id")
+    @EqualsAndHashCode.Include
     private int id;
 
     @ManyToOne
@@ -37,4 +36,8 @@ public class IngredientBatch {
 
     @Column(name = "expiry_date", nullable = false)
     private LocalDate expiryDate;
+
+    public String toString() {
+        return ""+ id;
+    }
 }

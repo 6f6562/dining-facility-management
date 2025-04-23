@@ -1,10 +1,7 @@
 package model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +12,13 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class PurchaseOrderDetail {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "purchase_order_detail_id")
+    @EqualsAndHashCode.Include
     private int id;
 
     @ManyToOne
@@ -43,4 +42,9 @@ public class PurchaseOrderDetail {
 
     @OneToMany(mappedBy = "purchaseOrderDetail", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<IngredientBatch> ingredientBatches = new ArrayList<>(); // Liên kết với IngredientBatch
+    @Override
+    public String toString() {
+        return ""+ id;
+    }
+
 }

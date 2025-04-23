@@ -1,10 +1,7 @@
 package model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +12,12 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class DiningTable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "table_id")
+    @EqualsAndHashCode.Include
     private int id;
     @Column(name = "table_number", nullable = false)
 
@@ -37,5 +36,10 @@ public class DiningTable {
 
     public DiningTable(int id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return ""+ tableNumber;
     }
 }

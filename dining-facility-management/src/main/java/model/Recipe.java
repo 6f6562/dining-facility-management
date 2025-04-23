@@ -1,10 +1,7 @@
 package model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "recipe")
@@ -12,11 +9,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Recipe {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "recipe_id")
+    @EqualsAndHashCode.Include
     private int id;
 
     @ManyToOne
@@ -29,4 +28,8 @@ public class Recipe {
 
     @Column(name = "required_quantity", nullable = false)
     private double requiredQuantity; // Lượng nguyên liệu cần thiết
+    @Override
+    public String toString() {
+        return ""+ id;
+    }
 }

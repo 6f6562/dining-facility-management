@@ -101,37 +101,14 @@ public class RecipeAdminView extends JPanel {
         deleteButton = new JButton("Xoá");
         refreshButton = new JButton("Làm mới");
 
-//        addButton.setBackground(PRIMARY_COLOR);
-//        addButton.setForeground(Color.WHITE);
-//        updateButton.setBackground(PRIMARY_COLOR);
-//        updateButton.setForeground(Color.WHITE);
-//        deleteButton.setBackground(PRIMARY_COLOR);
-//        deleteButton.setForeground(Color.WHITE);
-//        refreshButton.setBackground(PRIMARY_COLOR);
-//        refreshButton.setForeground(Color.WHITE);
-
-        JButton[] buttons = {addButton, updateButton, deleteButton, refreshButton};
-        for (JButton button : buttons) {
-            button.setFocusPainted(false);
-            button.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-            button.setBackground(new Color(30, 144, 255));  // Dodger Blue
-            button.setForeground(Color.WHITE);
-            button.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
-        }
-
-        for (JButton button : buttons) {
-            button.addMouseListener(new java.awt.event.MouseAdapter() {
-                @Override
-                public void mouseEntered(java.awt.event.MouseEvent evt) {
-                    button.setBackground(new Color(65, 165, 255));  // Hover
-                }
-
-                @Override
-                public void mouseExited(java.awt.event.MouseEvent evt) {
-                    button.setBackground(new Color(30, 144, 255));  // Default
-                }
-            });
-        }
+        addButton.setBackground(PRIMARY_COLOR);
+        addButton.setForeground(Color.WHITE);
+        updateButton.setBackground(PRIMARY_COLOR);
+        updateButton.setForeground(Color.WHITE);
+        deleteButton.setBackground(PRIMARY_COLOR);
+        deleteButton.setForeground(Color.WHITE);
+        refreshButton.setBackground(PRIMARY_COLOR);
+        refreshButton.setForeground(Color.WHITE);
 
         buttonPanel.add(addButton);
         buttonPanel.add(updateButton);

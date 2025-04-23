@@ -1,10 +1,7 @@
 package model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -14,11 +11,13 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class DishPriceHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "price_history_id")
+    @EqualsAndHashCode.Include
     private int id;
 
     @ManyToOne
@@ -33,4 +32,9 @@ public class DishPriceHistory {
 
     @Column(name = "price", nullable = false)
     private double price;
+
+    @Override
+    public String toString() {
+        return ""+ id;
+    }
 }
