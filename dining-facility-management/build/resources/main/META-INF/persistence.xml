@@ -20,7 +20,8 @@
         <class>model.PurchaseOrderHeader</class>
         <class>model.Recipe</class>
         <class>model.Vendor</class>
-
+        <class>model.Payment</class>
+        <class>model.Report</class>
 
         <properties>
             <property name="jakarta.persistence.jdbc.driver"
@@ -39,6 +40,20 @@
     </persistence-unit>
 
     <persistence-unit name="mssql-pu">
+        <class>model.Payment</class>
+        <class>model.Report</class>
+        <class>model.DiningTable</class>
+        <class>model.Dish</class>
+        <class>model.DishPriceHistory</class>
+        <class>model.Ingredient</class>
+        <class>model.IngredientBatch</class>
+        <class>model.IngredientModel</class>
+        <class>model.OrderDetail</class>
+        <class>model.OrderHeader</class>
+        <class>model.PurchaseOrderDetail</class>
+        <class>model.PurchaseOrderHeader</class>
+        <class>model.Recipe</class>
+        <class>model.Vendor</class>
         <properties>
             <property name="jakarta.persistence.jdbc.url"
                       value="jdbc:sqlserver://localhost:1433;databaseName=DiningFacilityManagement;trustServerCertificate=true"/>

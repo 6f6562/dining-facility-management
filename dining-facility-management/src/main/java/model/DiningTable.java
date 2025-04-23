@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@jakarta.persistence.Table(name = "dining_table")
+@Table(name = "dining_table")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,11 +21,16 @@ public class DiningTable {
     @Column(name = "table_id")
     private int id;
     @Column(name = "table_number", nullable = false)
+
     private int tableNumber;
     @Column(name = "status", nullable = false)
-    private String status;
+    private String status = "Available";
+
     @Column(name = "seating_capacity", nullable = false)
     private int seatingCapacity;
+
+    @Column(name = "location")
+    private String location;
 
     @OneToMany(mappedBy = "diningTable", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderHeader> orderHeaders = new ArrayList<>();

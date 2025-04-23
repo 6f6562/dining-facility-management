@@ -26,6 +26,7 @@ public class DataFakerRunner {
             table.setTableNumber(i + 1);
             table.setSeatingCapacity(faker.number().numberBetween(2, 10));
             table.setStatus(faker.bool().bool() ? "Available" : "Occupied");
+            table.setLocation(faker.address().cityName());
             em.persist(table);
         }
 
@@ -37,8 +38,9 @@ public class DataFakerRunner {
             dish.setDescription(faker.lorem().sentence());
             dish.setCalories(faker.number().numberBetween(100, 800));
             dish.setCategory(faker.food().ingredient());
-            dish.setPreparationTime(faker.number().numberBetween(10, 60)); // Thời gian nấu (phút)
+            dish.setPreparationTime(faker.number().numberBetween(10, 60));
             dish.setUnitPrice(faker.number().randomDouble(2, 5, 50));
+            dish.setStatus(faker.bool().bool() ? "Available" : "Unavailable");
             dishes.add(dish);
             em.persist(dish);
         }
@@ -58,7 +60,7 @@ public class DataFakerRunner {
         for (IngredientModel ingredientModel : ingredientModels) {
             for (int i = 0; i < 3; i++) {
                 Ingredient ingredient = new Ingredient();
-                ingredient.setName(faker.food().ingredient() + " - " + faker.number().digits(4)); // Tạo tên ingredient
+                ingredient.setName(faker.food().ingredient() + " - " + faker.number().digits(4));
                 ingredient.setIngredientModel(ingredientModel);
                 ingredient.setUnitOfMeasure(faker.options().option("kg", "liters", "pieces"));
                 ingredient.setStockQuantity(faker.number().randomDouble(2, 1, 100));
@@ -84,13 +86,13 @@ public class DataFakerRunner {
 
         // --- STEP 6: Tạo dữ liệu DishPriceHistory ---
         for (Dish dish : dishes) {
-            int historyCount = faker.number().numberBetween(1, 3); // Số lần thay đổi giá
+            int historyCount = faker.number().numberBetween(1, 3);
             LocalDateTime startDate = LocalDateTime.now().minusMonths(historyCount);
 
             for (int i = 0; i < historyCount; i++) {
                 DishPriceHistory priceHistory = new DishPriceHistory();
                 priceHistory.setDish(dish);
-                priceHistory.setPrice(faker.number().randomDouble(2, 5, 50)); // Giá món ăn
+                priceHistory.setPrice(faker.number().randomDouble(2, 5, 50));
                 priceHistory.setStartDate(startDate);
                 priceHistory.setEndDate(startDate.plusMonths(1));
                 em.persist(priceHistory);
@@ -101,18 +103,18 @@ public class DataFakerRunner {
 
         // --- STEP 7: Tạo dữ liệu Recipe ---
         for (Dish dish : dishes) {
-            int ingredientCount = faker.number().numberBetween(1, 5); // Số nguyên liệu cho mỗi món ăn
+            int ingredientCount = faker.number().numberBetween(1, 5);
             for (int i = 0; i < ingredientCount; i++) {
                 Recipe recipe = new Recipe();
                 recipe.setDish(dish);
                 recipe.setIngredientModel(ingredientModels.get(faker.number().numberBetween(0, ingredientModels.size())));
-                recipe.setRequiredQuantity(faker.number().randomDouble(2, (int) 0.1, 5)); // Số lượng nguyên liệu cần thiết
+                recipe.setRequiredQuantity(faker.number().randomDouble(2, 1, 5));
                 em.persist(recipe);
             }
         }
 
         // --- STEP 8: Tạo dữ liệu PurchaseOrderHeader và PurchaseOrderDetail ---
-        for (int i = 0; i < 10; i++) { // Tạo 10 đơn hàng
+        for (int i = 0; i < 10; i++) {
             PurchaseOrderHeader purchaseOrderHeader = new PurchaseOrderHeader();
             purchaseOrderHeader.setVendor(vendors.get(faker.number().numberBetween(0, vendors.size())));
             purchaseOrderHeader.setOrderDate(LocalDateTime.now().minusDays(faker.number().numberBetween(10, 100)));
@@ -133,24 +135,22 @@ public class DataFakerRunner {
                 em.persist(purchaseOrderDetail);
 
                 // Tạo dữ liệu cho IngredientBatch
-                int batchCount = faker.number().numberBetween(1, 3); // Mỗi chi tiết có từ 1-3 lô nguyên liệu
+                int batchCount = faker.number().numberBetween(1, 3);
                 for (int k = 0; k < batchCount; k++) {
                     IngredientBatch ingredientBatch = new IngredientBatch();
                     ingredientBatch.setIngredient(ingredients.get(faker.number().numberBetween(0, ingredients.size())));
                     ingredientBatch.setPurchaseOrderDetail(purchaseOrderDetail);
-                    ingredientBatch.setStockQuantity(faker.number().randomDouble(2, 1, 20)); // Số lượng tồn kho
-                    ingredientBatch.setReceivedDate(LocalDate.now().minusDays(faker.number().numberBetween(0, 30))); // Ngày nhận hàng
-                    ingredientBatch.setExpiryDate(LocalDate.now().plusDays(faker.number().numberBetween(30, 365))); // Ngày hết hạn
+                    ingredientBatch.setStockQuantity(faker.number().randomDouble(2, 1, 20));
+                    ingredientBatch.setReceivedDate(LocalDate.now().minusDays(faker.number().numberBetween(0, 30)));
+                    ingredientBatch.setExpiryDate(LocalDate.now().plusDays(faker.number().numberBetween(30, 365)));
                     em.persist(ingredientBatch);
                 }
             }
-
-
         }
 
         // --- STEP 9: Tạo dữ liệu OrderHeader và OrderDetail ---
         List<DiningTable> diningTables = em.createQuery("SELECT t FROM DiningTable t", DiningTable.class).getResultList();
-        for (int i = 0; i < 10; i++) { // Tạo 10 hóa đơn
+        for (int i = 0; i < 10; i++) {
             OrderHeader orderHeader = new OrderHeader();
             orderHeader.setDiningTable(diningTables.get(faker.number().numberBetween(0, diningTables.size())));
             orderHeader.setOrderDate(LocalDateTime.now().minusHours(faker.number().numberBetween(1, 72)));
@@ -175,12 +175,22 @@ public class DataFakerRunner {
                 orderDetail.setDeliveryTime(LocalDateTime.now().plusHours(faker.number().numberBetween(1, 5)));
                 orderDetail.setSubTotal(lineSubTotal);
                 orderDetail.setSpecialInstructions(faker.lorem().sentence());
+                orderDetail.setStatus(faker.options().option("Pending", "Preparing", "Ready", "Delivered"));
                 em.persist(orderDetail);
 
                 subTotal += lineSubTotal;
             }
             orderHeader.setSubTotal(subTotal);
             em.merge(orderHeader);
+
+            // --- STEP 10: Tạo dữ liệu Payment ---
+            Payment payment = new Payment();
+            payment.setOrderHeader(orderHeader);
+            payment.setAmount(orderHeader.getSubTotal());
+            payment.setPaymentMethod(faker.options().option("Cash", "Credit Card", "Debit Card", "Mobile Payment"));
+            payment.setStatus(faker.options().option("Pending", "Completed", "Failed", "Refunded"));
+            payment.setCreatedAt(LocalDateTime.now());
+            em.persist(payment);
         }
 
         em.getTransaction().commit();

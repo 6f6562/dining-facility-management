@@ -40,6 +40,9 @@ public class Dish {
     @Column(name = "calories")
     private int calories;
 
+    @Column(name = "status", nullable = false)
+    private String status;
+
     @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderDetail> orderDetails = new ArrayList<>(); // Liên kết với OrderDetail
 

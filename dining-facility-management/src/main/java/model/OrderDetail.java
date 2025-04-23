@@ -45,4 +45,7 @@ public class OrderDetail {
 
     @Column(name = "special_instructions")
     private String specialInstructions;
+
+    @Column(name = "status")
+    private String status;
 }
