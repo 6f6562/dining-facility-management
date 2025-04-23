@@ -11,9 +11,9 @@ import java.util.List;
 public class DishServiceImpl extends UnicastRemoteObject implements DishService {
     private final DishDAO dishDAO;
 
-    public DishServiceImpl() throws RemoteException {
+    public DishServiceImpl(DishDAO dishDAO) throws RemoteException {
         super();
-        this.dishDAO = new DishDAO();
+        this.dishDAO = dishDAO;
     }
 
     @Override

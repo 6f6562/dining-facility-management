@@ -13,9 +13,9 @@ import java.util.List;
 public class ReportServiceImpl extends UnicastRemoteObject implements ReportService {
     private final ReportDAO reportDAO;
 
-    public ReportServiceImpl() throws RemoteException {
+    public ReportServiceImpl(ReportDAO reportDAO) throws RemoteException {
         super();
-        this.reportDAO = new ReportDAO();
+        this.reportDAO = reportDAO;
     }
 
     @Override
